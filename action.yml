@@ -1,0 +1,27 @@
+name: 'AutoCodeRover Action'
+description: 'Run AutoCodeRover for automatic program repair'
+inputs:
+  bug_id:
+    description: 'Bug ID to repair'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    
+    - name: Install AutoCodeRover
+      run: |
+        python -m pip install --upgrade pip
+        pip install auto-code-rover
+      shell: bash
+
+    - name: Run AutoCodeRover
+      run: auto-code-rover repair --bug-id ${{ inputs.bug_id }}
+      shell: bash
+
+    - name: List repair results
+      run: ls -R repair_results/
+      shell: bash
